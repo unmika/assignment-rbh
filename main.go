@@ -18,10 +18,28 @@ func (t *todoList) add(id int, text string) {
 	t.data = append(t.data, todo{id: id, text: text})
 }
 
-func (t *todoList) get(keyword string) (output []int) {
+// type 1: search by single word
+func (t *todoList) get2(keyword string) (output []int) {
 	k := strings.Replace(keyword, " ", "+", -1)
 	for _, item := range t.data {
 		isFound := strings.Contains(item.text, k)
+		if isFound {
+			output = append(output, item.id)
+		}
+	}
+
+	return
+}
+
+// type 2: search by single word
+func (t *todoList) get(keyword string) (output []int) {
+	k := strings.Split(keyword, " ")
+	if len(k) > 1 {
+		return
+	}
+
+	for _, item := range t.data {
+		isFound := strings.Contains(item.text, k[0])
 		if isFound {
 			output = append(output, item.id)
 		}
@@ -46,12 +64,12 @@ func main() {
 	tl.add(2, " consectetur adipiscing elit sed do eiusmod tempor")
 	tl.add(3, " ipsum eiusmod lorem tempor")
 
-	fmt.Println(`
-	========================== ADD ============================
-	add(1, " lorem ipsum dolor sit amet")
-	add(2, " consectetur adipiscing elit sed do eiusmod tempor")
-	add(3, " ipsum eiusmod lorem tempor")
-	`)
+	fmt.Println("========================== ADD ============================")
+
+	for _, v := range tl.data {
+		fmt.Printf(`add(%v, "%v")`, v.id, v.text)
+		fmt.Println("")
+	}
 
 	// GET-Able to search by single word
 	result1 := tl.get("lorem")
